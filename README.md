@@ -15,11 +15,11 @@ external credential plugins requires the Cloud Provider CLI to be installed, for
 overkill and not friendly to automation task preparation.
 
 ```shell
-$ docker images | grep cli
+$ docker images --format "{{.Repository}}:{{.Tag}}\t{{.Size}}" | grep cli
 
-gcr.io/google.com/cloudsdktool/google-cloud-cli   latest                                     275a080b472c   20 hours ago    2.82GB
-public.ecr.aws/aws-cli/aws-cli                    latest                                     09df25bd783c   2 days ago      415MB
-mcr.microsoft.com/azure-cli                       latest                                     6cf11f9134f2   5 weeks ago     722MB
+gcr.io/google.com/cloudsdktool/google-cloud-cli:latest	2.82GB
+public.ecr.aws/aws-cli/aws-cli:latest	415MB
+mcr.microsoft.com/azure-cli:latest	722MB
 ```
 
 KubeCIA, which is a lightweight and easy-to-use credential plugin for Kubernetes, is born to reduce the dependency of
