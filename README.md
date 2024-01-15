@@ -8,6 +8,8 @@
 [![](https://img.shields.io/github/downloads/seal-io/kubecia/total)](https://github.com/seal-io/kubecia/releases)
 [![](https://img.shields.io/github/license/seal-io/kubecia?label=license)](https://github.com/seal-io/kubecia#license)
 
+This tool is maintained by [Seal](https://github.com/seal-io).
+
 ## Background
 
 Since Kubernetes v1.22, we can use external credential plugins to authenticate with Kubernetes clusters. However, using
