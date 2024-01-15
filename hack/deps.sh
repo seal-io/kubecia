@@ -11,9 +11,15 @@ function mod() {
   local target="$1"
   local path="$2"
 
+  shift 2
+
   seal::log::debug "modding ${target}"
 
   [[ "${path}" == "${ROOT_DIR}" ]] || pushd "${path}" >/dev/null 2>&1
+
+  if [[ -n "$*" ]] && [[ "$*" =~ update$ ]]; then
+    go get -u ./...
+  fi
 
   go mod tidy
   go mod download
