@@ -39,10 +39,16 @@ function seal::target::build_tags() {
 }
 
 readonly DEFAULT_BUILD_PLATFORMS=(
-  linux/amd64
-  linux/arm64
   darwin/amd64
   darwin/arm64
+  freebsd/386
+  freebsd/amd64
+  freebsd/arm
+  linux/386
+  linux/amd64
+  linux/arm64
+  linux/arm
+  windows/arm64
   windows/amd64
 )
 
