@@ -30,13 +30,6 @@ help:
 	#           - `BUILD_TAGS="jsoniter" make build` build with specified tags.
 	#           - `BUILD_PLATFORMS="linux/amd64,linux/arm64" make build` do multiple platforms go build.
 	#
-	#   * [dev] `make package`, embed running resources into a Docker image on one platform.
-	#           - `REPO=xyz make package` package all targets named with xyz repository.
-	#           - `VERSION=vX.y.z+l.m make package` package all targets named with vX.y.z-l.m tag.
-	#           - `TAG=main make package` package all targets named with main tag.
-	#           - `OS=linux ARCH=arm64 make package` package all targets run on linux/arm64 arch.
-	#           - `PACKAGE_BUILD=false make package` prepare build resource but disable docker build.
-	#           - `DOCKER_USERNAME=... DOCKER_PASSWORD=... PACKAGE_PUSH=true make package` execute docker push after build.
 	#
 	#   * [ci]  `make ci`, execute `make deps`, `make lint`, `make test`, `make build` and `make package`.
 	#           - `CI_CHECK=false make ci` only execute `make build` and `make package`.
