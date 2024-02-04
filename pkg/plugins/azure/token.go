@@ -10,9 +10,8 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/log"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
-	"k8s.io/klog/v2"
-
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"k8s.io/klog/v2"
 
 	"github.com/seal-io/kubecia/pkg/cache"
 	"github.com/seal-io/kubecia/pkg/token"

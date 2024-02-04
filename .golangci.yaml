@@ -44,15 +44,15 @@ linters:
     - exportloopref
     - godot
     - goconst
-    - gofumpt
     - gocritic
     - gosimple
     - gosec
     - govet
+    - gofumpt
+    - gofmt
     - ineffassign
     - lll
     - makezero
-    - misspell
     - misspell
     - nakedret
     - nilerr
@@ -67,6 +67,7 @@ linters:
     - unused
     - usestdlibvars
     - whitespace
+    - wsl
 
     # enable complexity linters
     # - dupl
@@ -75,22 +76,20 @@ linters:
     # - funlen
 
 linters-settings:
-  staticcheck:
-    checks: ["all", "-SA1019", "-SA2002", "-SA5008"]
-  stylecheck:
-    checks: ["all", "-ST1003"]
-  gosec:
-    severity: "low"
-    confidence: "low"
-    excludes:
-      - G101
-      - G112
-  revive:
-    rules:
-      - name: var-naming
-        disabled: true
-        arguments:
-          - ["HTTP", "ID", "TLS", "TCP", "UDP", "API", "CA", "URL", "DNS"]
+  decorder:
+    dec-order:
+      - const
+      - var
+      - func
+    disable-init-func-first-check: false
+    disable-dec-order-check: true
+  errorlint:
+    # Check whether fmt.Errorf uses the %w verb for formatting errors. See the readme for caveats
+    errorf: true
+    # Check for plain type assertions and type switches
+    asserts: true
+    # Check for plain error comparisons
+    comparison: true
   godot:
     # Comments to be checked: `declarations`, `toplevel`, or `all`.
     # Default: declarations
@@ -99,32 +98,74 @@ linters-settings:
     # Default: []
     exclude:
       # Exclude todo and fixme comments.
-      - "^fixme:"
-      - "^todo:"
+      - "(?i)^ FIXME:"
+      - "(?i)^ TODO:"
+      - "(?i)^ SPDX\\-License\\-Identifier:"
     # Check that each sentence ends with a period.
     # Default: true
     period: true
     # Check that each sentence starts with a capital letter.
     # Default: false
     capital: true
-  lll:
-    # max line length, lines longer will be reported. Default is 120.
-    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
-    line-length: 150
-    # tab width in spaces. Default to 1.
-    tab-width: 1
   goconst:
     # Minimal length of string constant.
     # Default: 3
     min-len: 3
     # Minimum occurrences of constant string count to trigger issue.
     # Default: 3
-    min-occurrences: 3
+    min-occurrences: 10
+  gosimple:
+    go: "1.21"
+    checks: [ "all" ]
+  gosec:
+    severity: "low"
+    confidence: "low"
+    excludes:
+      - G101
+      - G107
+      - G112
+      - G404
+  gofumpt:
+    # Choose whether to use the extra rules.
+    # Default: false
+    extra-rules: true
+  gofmt:
+    # Simplify code: gofmt with `-s` option.
+    # Default: true
+    simplify: true
+    # Apply the rewrite rules to the source before reformatting.
+    # https://pkg.go.dev/cmd/gofmt
+    # Default: []
+    rewrite-rules:
+      - pattern: 'interface{}'
+        replacement: 'any'
+      - pattern: 'a[b:len(a)]'
+        replacement: 'a[b:]'
+  lll:
+    # max line length, lines longer will be reported. Default is 120.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 150
+    # tab width in spaces. Default to 1.
+    tab-width: 1
+  makezero:
+    always: false
   misspell:
     # Correct spellings using locale preferences for US or UK.
     # Default is to use a neutral variety of English.
     # Setting locale to US will correct the British spelling of 'colour' to 'color'.
     locale: US
+  nakedret:
+    max-func-lines: 60
+  revive:
+    rules:
+      - name: var-naming
+        disabled: true
+        arguments:
+          - [ "HTTP", "ID", "TLS", "TCP", "UDP", "API", "CA", "URL", "DNS" ]
+  staticcheck:
+    checks: [ "all", "-SA1019", "-SA2002", "-SA5008" ]
+  stylecheck:
+    checks: [ "all", "-ST1003" ]
   unparam:
     # Inspect exported functions, default is false. Set to true if no external program/library imports your code.
     # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
@@ -153,20 +194,6 @@ linters-settings:
     # Mark all identifiers inside generated files as used.
     # Default: true
     generated-is-used: true
-  errorlint:
-    # Check whether fmt.Errorf uses the %w verb for formatting errors. See the readme for caveats
-    errorf: true
-    # Check for plain type assertions and type switches
-    asserts: true
-    # Check for plain error comparisons
-    comparison: true
-  makezero:
-    always: false
-  gosimple:
-    go: "1.19"
-    checks: ["all"]
-  nakedret:
-    max-func-lines: 60
   usestdlibvars:
     # Suggest the use of http.MethodXX
     # Default: true
@@ -186,13 +213,15 @@ linters-settings:
     # Suggest the use of crypto.Hash
     # Default: false
     crypto-hash: true
-  decorder:
-    dec-order:
-      - const
-      - var
-      - func
-    disable-init-func-first-check: false
-    disable-dec-order-check: true
+  wsl:
+    # Allows assignments to be cuddled with anything.
+    allow-assign-and-anything: true
+    # Allow blocks to end with comments.
+    allow-trailing-comment: true
+    # Causes an error if a short declaration (:=) cuddles with anything other than
+    # another short declaration.
+    # This logic overrides force-err-cuddling among others.
+    force-short-decl-cuddling: false
 
 issues:
   exclude-rules:
@@ -204,4 +233,3 @@ issues:
         - makezero
         - lll
         - funlen
-        - wsl
