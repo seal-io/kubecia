@@ -67,7 +67,6 @@ linters:
     - unused
     - usestdlibvars
     - whitespace
-    - wsl
 
     # enable complexity linters
     # - dupl
@@ -213,15 +212,6 @@ linters-settings:
     # Suggest the use of crypto.Hash
     # Default: false
     crypto-hash: true
-  wsl:
-    # Allows assignments to be cuddled with anything.
-    allow-assign-and-anything: true
-    # Allow blocks to end with comments.
-    allow-trailing-comment: true
-    # Causes an error if a short declaration (:=) cuddles with anything other than
-    # another short declaration.
-    # This logic overrides force-err-cuddling among others.
-    force-short-decl-cuddling: false
 
 issues:
   exclude-rules:
@@ -229,7 +219,5 @@ issues:
       linters:
         - errcheck
         - gosec
-        - rowserrcheck
         - makezero
         - lll
-        - funlen
