@@ -87,10 +87,11 @@ function seal::lint::run() {
     seal::log::fatal "cannot execute goimports-reviser as client is not found"
   fi
 
+  local goimport_target="${*:$#}"
+  goimport_target="${goimport_target//\/.../}"
   local goimports_opts=(
     "-rm-unused"
     "-use-cache"
-    "-recursive"
     "-imports-order=std,general,company,project,blanked,dotted"
     "-output=file"
   )
@@ -102,13 +103,19 @@ function seal::lint::run() {
     fi
   done
   if [[ -n "${goimports_excludes[*]}" ]]; then
-    goimports_opts+=("-excludes=$(seal::util::join_array "," "${goimports_excludes[*]}")")
+    goimports_opts+=("-excludes=$(seal::util::join_array "," "${goimports_excludes[@]}")")
   fi
-  goimport_target="${*:$#}"
-  goimports_opts+=("${goimport_target//\/.../}")
-
-  seal::log::debug "goimports-reviser ${goimports_opts[*]}"
-  "$(seal::lint::goimports_reviser::bin)" "${goimports_opts[@]}"
+  if [[ "${goimport_target}" == "${ROOT_DIR}" ]]; then
+    seal::log::debug "go list -f \"{{.Dir}}\" ./... | xargs -I {} find {} -maxdepth 1 -type f -name '*.go' | xargs -I {} goimports-reviser ${goimports_opts[*]} {}"
+    go list -f "{{.Dir}}" ./... | xargs -I {} find {} -maxdepth 1 -type f -name '*.go' | xargs -I {} "$(seal::lint::goimports_reviser::bin)" "${goimports_opts[@]}" {}
+  else
+    seal::log::debug "pushd \"${goimport_target}\" >/dev/null 2>&1; go list -f \"{{.Dir}}\" ./... | xargs -I {} find {} -maxdepth 1 -type f -name '*.go' | xargs -I {} goimports-reviser ${goimports_opts[*]} {}; popd"
+    # shellcheck disable=SC2164
+    pushd "${goimport_target}" >/dev/null 2>&1
+    go list -f "{{.Dir}}" ./... | xargs -I {} find {} -maxdepth 1 -type f -name '*.go' | xargs -I {} "$(seal::lint::goimports_reviser::bin)" "${goimports_opts[@]}" {}
+    # shellcheck disable=SC2164
+    popd >/dev/null 2>&1
+  fi
 
   if ! seal::lint::golangci_lint::validate; then
     seal::log::fatal "cannot execute golangci-lint as client is not found"
